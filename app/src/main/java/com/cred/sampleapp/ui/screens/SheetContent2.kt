@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomSheetState
+import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.OutlinedButton
@@ -26,8 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cred.sampleapp.R
@@ -36,6 +42,7 @@ import com.cred.sampleapp.ui.theme.cadetBlue
 import com.cred.sampleapp.ui.theme.lightSteelBlue
 import com.cred.sampleapp.ui.theme.richBlack
 import com.cred.sampleapp.ui.theme.royalBlue
+import com.cred.sampleapp.utils.stashItems
 
 @Composable
 fun SheetContent2(
@@ -174,4 +181,13 @@ fun SheetContent2(
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun SheetContent2Preview() {
+    SheetContent2(
+        configuration = LocalConfiguration.current,
+        data = stashItems
+    )
 }

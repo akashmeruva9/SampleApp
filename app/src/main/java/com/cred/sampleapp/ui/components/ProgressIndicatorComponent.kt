@@ -47,3 +47,11 @@ fun ProgressIndicatorComponent(
         )
     }
 }
+
+@Preview
+@Composable
+fun ProgressIndicatorComponentPreview() {
+    ProgressIndicatorComponent(
+
+    )
+}

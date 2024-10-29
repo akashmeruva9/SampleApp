@@ -50,13 +50,14 @@ import com.cred.sampleapp.ui.theme.CharcoalGray
 import com.cred.sampleapp.ui.theme.DarkSlateGray
 import kotlinx.coroutines.launch
 import com.cred.sampleapp.ui.theme.SampleAppTheme
+import com.cred.sampleapp.utils.stashItems
 import kotlinx.coroutines.CoroutineScope
 
 @Preview
 @Composable
 fun StashScreen(
+    viewModel: StashScreenViewModel = viewModel()
 ) {
-    val viewModel : StashScreenViewModel = viewModel()
     val state by viewModel.viewState.collectAsStateWithLifecycle()
     val configuration = LocalConfiguration.current
     val scope = rememberCoroutineScope()
@@ -282,10 +283,10 @@ private fun StashScreenPreview(
     state: BottomSheetValue
 ) {
     SampleAppTheme {
-        StashScreen(
-            uiState= StashScreenViewState.Content(listOf()),
+        StashScreenContent(
             configuration = LocalConfiguration.current,
-            scope = rememberCoroutineScope()
+            scope = rememberCoroutineScope(),
+            data= stashItems
         )
     }
 }

@@ -8,6 +8,6 @@ fun formatCurrencyWithRupee(amount: String): String {
         val number = amount.toDoubleOrNull() ?: 0.0
         "₹${NumberFormat.getNumberInstance(Locale("en", "IN")).format(number)}"
     } catch (e: NumberFormatException) {
-        "₹$amount" // Return the raw input with rupee symbol if formatting fails
+        "₹$amount"
     }
 }

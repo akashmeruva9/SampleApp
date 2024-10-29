@@ -1,6 +1,7 @@
 package com.cred.sampleapp.ui.screens
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -19,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.BottomSheetState
+import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -28,7 +30,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -40,15 +44,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cred.sampleapp.data.entities.StashItemEntity
 import com.cred.sampleapp.ui.components.CircularAmountPicker
+import com.cred.sampleapp.ui.components.EmptyDataErrorComponent
 import com.cred.sampleapp.ui.theme.DeepCharcoal
 import com.cred.sampleapp.ui.theme.MidnightBlue
 import com.cred.sampleapp.ui.theme.SlateGray
@@ -57,6 +66,7 @@ import com.cred.sampleapp.ui.theme.royalBlue
 import com.cred.sampleapp.ui.theme.steelBlue
 import com.cred.sampleapp.utils.formatCurrencyWithRupee
 import com.cred.sampleapp.utils.rememberCurrencyVisualTransformation
+import com.cred.sampleapp.utils.stashItems
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
@@ -67,6 +77,7 @@ fun MainContent(
     data: List<StashItemEntity>,
 ) {
 
+    val context = LocalContext.current
     val currencyVisualTransformation = rememberCurrencyVisualTransformation(currency = "INR")
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
@@ -83,7 +94,6 @@ fun MainContent(
     val ctaText by rememberSaveable { mutableStateOf(data.getOrNull(0)?.ctaText ?: "") }
     var creditAmount by rememberSaveable { mutableStateOf((data.getOrNull(0)?.card?.minRange ?: 0).toString()) }
     var progress by rememberSaveable { mutableDoubleStateOf((data.getOrNull(0)?.card?.minRange ?: 0) * 360.0 / (data.getOrNull(0)?.card?.maxRange ?: 1).toDouble()) }
-
 
     Column(
         Modifier.fillMaxSize().clickable(
@@ -243,11 +253,17 @@ fun MainContent(
                                                 value = creditAmount,
                                                 onValueChange = { newValue ->
                                                     val trimmed = newValue.trimStart('0').takeIf { it.all { char -> char.isDigit() } } ?: "0"
-                                                    val numericValue = trimmed.toIntOrNull() ?: 0
+                                                    val numericValue = trimmed.toLongOrNull() ?: 0
+
+                                                    if( numericValue < 10000000 )
+                                                        creditAmount = trimmed
 
                                                     if (numericValue in minAmount..maxAmount) {
-                                                        creditAmount = trimmed
                                                         progress = (numericValue.toDouble()/maxAmount)*360.00
+                                                    }else if( numericValue > maxAmount ){
+                                                        progress = (maxAmount.toDouble()/maxAmount)*360.00
+                                                    }else if( numericValue < minAmount ){
+                                                        progress = (minAmount.toDouble()/maxAmount)*360.00
                                                     }
                                                 },
 
@@ -291,6 +307,23 @@ fun MainContent(
                     Button(
                         onClick = {
                             scope.launch {
+                                focusManager.clearFocus()
+
+                                val trimmed = creditAmount.trimStart('0').takeIf { it.all { char -> char.isDigit() } } ?: "0"
+                                val numericValue = trimmed.toLongOrNull() ?: 0
+
+                                if(numericValue < minAmount) {
+                                    Toast.makeText(context, "Minimum amount is $minAmount, value adjusted to $minAmount", Toast.LENGTH_SHORT).show()
+                                    creditAmount = minAmount.toString()
+                                    progress = (minAmount.toDouble()/maxAmount)*360.00
+                                }
+
+                                else if( numericValue > maxAmount) {
+                                    Toast.makeText(context, "Maximum amount is $maxAmount, value adjusted to $maxAmount", Toast.LENGTH_SHORT).show()
+                                    creditAmount = maxAmount.toString()
+                                    progress = (maxAmount.toDouble()/maxAmount)*360.00
+                                }
+
                                 bottomSheetState.expand()
                             }
                         },
@@ -319,4 +352,18 @@ fun MainContent(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Preview
+@Composable
+fun MainContentPreview() {
+    MainContent(
+        bottomSheetState = BottomSheetState(
+            BottomSheetValue.Collapsed,
+            Density(LocalContext.current)
+        ),
+        configuration = LocalConfiguration.current,
+        data = stashItems
+    )
 }

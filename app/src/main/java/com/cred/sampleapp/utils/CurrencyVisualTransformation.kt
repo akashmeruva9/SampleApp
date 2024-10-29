@@ -43,13 +43,11 @@ class CurrencyOffsetMapping(originalText: String, formattedText: String) : Offse
         val digitIndexes = mutableListOf<Int>()
         var currentIndex = 0
         for (digit in firstString) {
-            // Find the index of the digit in the second string
             val index = secondString.indexOf(digit, currentIndex)
             if (index != -1) {
                 digitIndexes.add(index)
                 currentIndex = index + 1
             } else {
-                // If the digit is not found, return an empty list
                 return emptyList()
             }
         }

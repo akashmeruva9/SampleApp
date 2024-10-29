@@ -18,7 +18,10 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.cred.sampleapp.data.entities.PlanEntity
+import com.cred.sampleapp.utils.emiCardColors
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -160,4 +163,13 @@ fun CircularAmountPicker(
 
 fun deltaAngle(x: Float, y: Float): Double {
     return Math.toDegrees(atan2(y.toDouble(), x.toDouble()))
+}
+
+@Preview
+@Composable
+fun CircularAmountPickerPreview() {
+    CircularAmountPicker(
+        onProgressChanged = {},
+        initialAngle = 0.0
+    )
 }

@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cred.sampleapp.data.entities.PlanEntity
+import com.cred.sampleapp.utils.emiCardColors
 
 @Composable
 fun EMICard(
@@ -133,16 +134,16 @@ fun FavoriteButton(
             ) {
                 drawCircle(
                     color = color,
-                    style = Stroke(width = if (isChecked) 3f else 1f) // Customize the width
+                    style = Stroke(width = if (isChecked) 3f else 1f)
                 )
             }
 
             if (isChecked) {
                 Icon(
-                    imageVector = Icons.Default.Check, // Use a check icon
+                    imageVector = Icons.Default.Check,
                     contentDescription = null,
                     tint = color,
-                    modifier = Modifier.size(16.dp) // Adjust size to fit inside circle
+                    modifier = Modifier.size(16.dp)
                 )
             }
         }
@@ -150,21 +151,18 @@ fun FavoriteButton(
 }
 
 @Preview
-@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview(device = Devices.PIXEL_C)
 @Composable
-fun HorizontalSnackCardPreview() {
-//    val emiCard = emiPlans.first()
-//    HorizontalSnackCard(emiCard = emiCard)
-}
-
-@Preview
-@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview(device = Devices.PIXEL_C)
-@Composable
-fun FavoriteButtonPreview() {
-//    FavoriteButton(
-//        checked = false,
-//        onFavoriteChange = {}
-//    )
+fun EMICardPreview() {
+    EMICard(
+        checked = true,
+        color= emiCardColors[0],
+        onSelect = {},
+        emiCard = PlanEntity(
+            "$4560 /mo",
+            "$4560 /mo for 12 Months",
+            "for ",
+            "see calculations",
+            ""
+        )
+    )
 }

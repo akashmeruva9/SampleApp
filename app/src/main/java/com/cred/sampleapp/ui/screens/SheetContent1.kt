@@ -17,7 +17,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetState
+import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedButton
@@ -35,7 +37,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cred.sampleapp.data.entities.StashItemEntity
@@ -47,6 +53,7 @@ import com.cred.sampleapp.ui.theme.lightSteelBlue
 import com.cred.sampleapp.ui.theme.royalBlue
 import com.cred.sampleapp.ui.theme.tealGray
 import com.cred.sampleapp.utils.emiCardColors
+import com.cred.sampleapp.utils.stashItems
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -241,4 +248,17 @@ fun SheetContent1(
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun SheetContent1Preview() {
+    SheetContent1(
+        bottomSheetState = BottomSheetState(
+            BottomSheetValue.Collapsed,
+            Density(LocalContext.current)
+        ),
+        configuration = LocalConfiguration.current,
+        data = stashItems
+    )
 }

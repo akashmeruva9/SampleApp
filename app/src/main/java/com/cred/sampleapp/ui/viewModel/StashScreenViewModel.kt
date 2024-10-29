@@ -28,14 +28,11 @@ class StashScreenViewModel @Inject constructor(
         // here scope defines the lifetime of the coroutine
         viewModelScope.launch {
             _viewState.value = StashScreenViewState.Loading
-            Log.e("MainContentViewModel", "Loading")
 
             try {
                 val list = repository.getDomainItems()
                 _viewState.value = StashScreenViewState.Content(list = list)
-                Log.e("MainContentViewModel", "Show Content")
             } catch (e: Exception) {
-                Log.e("MainContentViewModel", "Error loading data", e)
                 _viewState.value = StashScreenViewState.Error
             }
         }
